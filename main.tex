@@ -23,14 +23,14 @@
 
 
 % The full title of the paper
-\title{ Immersive Guitar Loudspeaker Cabinet Reproduction System Using Spherical Microphone Array Signals and HRIRs}
+\title{ Immersive Guitar Playback System Using HRIRs and Spherical Microphone Array Measurement in a Room}
 
 % Put the authors in order here. The number in brackets define the corresponding affiliation.
 \author[1]{Takashi Minagawa}
 \author[1]{Kazuma Watanabe}
 
 % Affiliations go here
-\affil[1]{Faculty of Design, Kyushu University}
+\affil[1]{Graduate School of Design, Kyushu University}
 
 
 
@@ -43,7 +43,7 @@
 \lastnames{Minagawa and Watanabe}
 
 % Short title should describe your topic but not be too long.
-\shorttitle{Guitar Cabinet Reproduction with Spherical Array Signals and HRIRs}
+\shorttitle{Guitar Playback with HRIRs and Spherical Array Signals}
 
 
 % This is required and draws the top title
@@ -56,21 +56,21 @@
     \maketitle
 
     \begin{onecolabstract}
-        A guitar loudspeaker cabinet simulation system with modern binaural rendering method is proposed.
-        The system reproduces the binaural sound image of the sound field produced by a guitar speaker cabinet, which gives immersive guitar playing experience through convolution with the pre-amplified guitar signal from the player.
-        The method was achieved by employing directional impulse responses obtained from a 80-channel spherical microphone array and HRIR dataset, and integrating them in the spherical harmonic domain.
-        This work hopes to provide an outlook of the immersive guitar playing experience.
+        A guitar playback system with a modern binaural rendering method is proposed.
+        The system reproduces the binaural sound image of the sound field produced by a electric guitar loudspeaker cabinet. This system gives immersive guitar playing experience by convolving rendered binaural impulse response with the pre-amplified guitar signal.
+        The system was composed from directional impulse responses obtained from a 80-channel spherical microphone array and a HRIR dataset, and integrating them in the spherical harmonic domain.
+        This work provides an outlook of the immersive guitar playing experience.
     \end{onecolabstract}
 ]
 
 \section{Introduction}
 
-Electric guitar players are not always in the best situation to play through a cranked up guitar amplifiers, since they need to consider about their housemate and neighbors.
+Electric guitar players are not always in the best situation to play through a cranked up guitar amplifier, since they need to consider about their housemates and neighbors.
 The best known solution of this problem is using a guitar amplifier simulator such as Axe-Fx series by Fractal Audio Systems\footnote{\url{https://www.fractalaudio.com/}} and Kemper Profiler by Kemper Amps\footnote{\url{https://www.kemper-amps.com/}}.
 These modern guitar amp simulators reproduces the speaker cabinet section of the amplifiers by convolving the pre-amplified guitar signals with recorded impluse responses of the target cabinets.
 While these systems simulates the original amplifiers significantly well, they lack the functionality of reproducing the farfield interaction of speaker cabinets and rooms especially while monitoring on headphones, since those systems focus on reproducing the nearfield response of the original rig system.
 In addition, the phantom image of the processed guitar signal is stuck in the center regardless of the player's head position.
-The simplest solution to these problem is to apply reverberation and directional que by convolving room impulse response and HRIR, but a single room impulse response only contains the response of a single point of a room and this approach will completely igonore the interation between directional component of the room sound reflection and the directional que of HRIRs.
+The simplest solution to these problem is to apply reverberation and directional cue by convolving room impulse response and HRIR, but a single room impulse response only contains the response of a single point of a room and this approach will completely igonore the interation between directional component of the room sound reflection and the directional cue of HRIRs.
 This work aims to overcome these problems by employing directional impulse response signals of a guitar speaker cabinet in a room obtained from a spherical microphone array and HRIR datasets, and combining them in spherical harmonic domain as shown in \cite{Andersson2017-qg}.
 The authors implemented a system which reproduces binaural guitar speaker cabinet responses in a room, with a functionality to modify the azimuth of the impulse response rendering direction.
 
@@ -139,7 +139,7 @@ The impulse responses are then convolved with guitar signal by convolver plugin 
 \begin{figure}
     \centering
     \includegraphics[width=0.45\textwidth]{./fig/gui.png}
-    \caption{The prototype of plugin GUI}
+    \caption{The GUI of the plugin (prototype)}
     \label{fig:gui}
 \end{figure}
 
