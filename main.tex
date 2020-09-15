@@ -1,10 +1,14 @@
 % Template for 61st conference for non-peer-reviewed articled
 \documentclass[convention,e-brief]{aesconf-current}
+\usepackage{verbatim}
+\usepackage{smartdiagram}
+\usesmartdiagramlibrary{additions}
 
 % Graphics path
 \graphicspath{{./}{figures/}}
 
 % UTF-8 encoding is recommended but use one that works for you.
+\usepackage{tikz}
 \usepackage[utf8]{inputenc}
 \usepackage{pdfsync}
 \usepackage{amssymb}
@@ -65,15 +69,30 @@
 
 \section{Introduction}
 
-Nowadays, guitarists playing at home do not have a convincing solution to have a immersive in-venue experience.
+Nowadays, guitarists playing at home do not have a convincing solution to have a immersive simulated in-venue experience.
 One may want to reexperience the accurate room response of his or her favorite venue, or one may want to check the acoustic response of his or her future stage in different direction for practicing.
+
+
 The best option to overcome this problem is using a guitar amplifier simulator such as Axe-Fx series by Fractal Audio Systems\footnote{\url{https://www.fractalaudio.com/}} and Kemper Profiler by Kemper Amps\footnote{\url{https://www.kemper-amps.com/}}.
-These modern guitar amp simulators reproduces the speaker cabinet section of the amplifiers by convolving the pre-amplified guitar signals with recorded impluse responses of the target cabinets.
-While these systems simulates the original amplifiers significantly well, they lack the functionality of reproducing the farfield interaction of speaker cabinets and rooms especially while monitoring on headphones, since those systems focus on reproducing the nearfield response of the original playback system.
+A block diagram of a guitar playback system is illustrated in Fig.\ref{fig:diag}.
+Modern guitar amp simulators like ones mentioned above process the guitar input signal with the simulated pre-amplifier and power-amplifier section, and convolve recorded guitar loudspeaker cabinet impulse response or a simulation of it.
+While these systems simulates the original amplifiers significantly well and suit for recording and live uses, they lack the functionality of reproducing the farfield interaction of speaker cabinets and rooms especially while monitoring on headphones, since those systems focus on reproducing the nearfield response of the original playback system.
 In addition, the phantom image of the processed guitar signal is stuck in the center regardless of the player's head position.
 The simplest solution to these problem is to apply reverberation and directional cue by convolving room impulse response and HRIR, but a single room impulse response only contains the response of a single point of a room and this approach will completely igonore the interation between directional component of the room sound reflection and the directional cue of HRIRs.
+
 This work aims to overcome these problems by employing directional impulse response signals of a guitar speaker cabinet in a room obtained from a spherical microphone array and HRIR datasets, and combining them in spherical harmonic domain as shown in \cite{Andersson2017-qg}.
+The main focus of this work is to enhancing the player experience by improving the reproduction of interaction between guitar loudspeaker cabinet and the room it is played in.
 The authors implemented a system which reproduces binaural guitar speaker cabinet responses in a room, with a functionality to modify the azimuth of the impulse response rendering direction.
+
+\begin{figure}
+    \begin{center}
+        \smartdiagram[flow diagram]{Player,
+            Guitar, Pre-amp section, Power-amp section, Loudspeaker cabinet, Room }
+        \caption{A flow chart illustration of guitar playback systems. } \label{fig:diag}
+    \end{center}
+\end{figure}
+
+
 
 \section{Methods}
 
@@ -152,6 +171,13 @@ However, the following reinforcements to the system are needed to improve the im
     \item A binaural signal rendering backend within the plugin to dynamically render binaural signals from other directional impulse response and HRIR dataset in SOFA convention format.
     \item Integration of head-tracker to convolve impulse response of the appropriate angle in relation to the listener(player)'s head rotation.
 \end{itemize}
+
+Moreover, it is worth mentioning that as shown in Fig.\ref{fig:diag}, the loudspeaker cabinet impulse response and directional room impulse response can be recorded separately and used as different module to render the combined binaural signal later.
+We refer to this method as the modular rendering method.
+By using the modular rendering method, $mn$ combinations of guitar loudspeaker cabinet impulse response and directional room impulse response could be rendered with $m$ guitar loudspeaker cabinet impulse response siganls and $n$ sets of directional room impulse response signals.
+On the contrary, with the non-modular method as done in this work, guitar loudspeaker cabinets need to be physically placed in the desired room, and it needs to be done $mn$ times to obtain the same combination.
+However as a practical problem, coloration of guitar loudspeaker cabinet impulse response signal and directional room impulse response signals from measurement system is inevitable.
+The validity of the modular rendering method should be further considered.
 
 \section{Summary and Conclusion}
 
