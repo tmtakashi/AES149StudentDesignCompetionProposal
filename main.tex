@@ -89,7 +89,7 @@ The authors implemented a system which reproduces binaural guitar speaker cabine
     \begin{center}
         \smartdiagram[flow diagram]{Player,
             Guitar, Pre-amp section, Power-amp section, Loudspeaker cabinet, Room response }
-        \caption{A flow chart illustration of guitar playback systems. } \label{fig:diag}
+        \caption{A block diagram illustration of guitar playback systems. } \label{fig:diag}
     \end{center}
 \end{figure}
 
@@ -98,7 +98,7 @@ The authors implemented a system which reproduces binaural guitar speaker cabine
 \section{Methods}
 
 \subsection{Theory}
-The theory behind the binaural signal rendering process based on \citet{Andersson2017-qg}'s work is briefly described below.
+The theory behind the binaural signal rendering process based on \citeauthor{Andersson2017-qg}'s work \cite{Andersson2017-qg} is briefly described below.
 Further details are described in \cite{Andersson2017-qg} and they are left to the readers.
 
 The frequency domain signals in the listener's ear positions $S^{l, r}$ can be described as the combination of head-related transfer function (HRTF) $H^{l, r}(\omega, \Omega)$ and plane wave decomposition of the sound field $D(\omega, \Omega)$ as below.
@@ -177,7 +177,7 @@ The plugin comes with a rotation slider GUI which can adjust the rotation angle 
 \begin{figure}
     \centering
     \includegraphics[width=0.3\textwidth]{./fig/headtracker.jpg}
-    \caption{A smartphone is mounted on top of the monitoring headphones, used as a gyro sensor controling the rotation angle parameter in the plugin.}
+    \caption{A smartphone pointed with an yellow arrow is mounted on top of the monitoring headphones. The smartphone is used as a gyro sensor controling the rotation angle parameter in the plugin.}
     \label{fig:headtracker}
 \end{figure}
 
@@ -189,7 +189,7 @@ As stated in introduction, the system can help guitar players to flashback their
 However, the following reinforcements to the system are needed to improve the immersive guitar playing experience and they are currently work in progress.
 
 \begin{itemize}
-    \item A binaural signal rendering backend within the plugin to dynamically render binaural signals from other directional impulse response and HRIR dataset in SOFA convention format.
+    \item A binaural signal rendering backend within the plugin to dynamically render binaural signals from other directional impulse response and HRIR dataset in SOFA convention format\cite{AES69-2015}.
     \item Improvements on the binaural impulse response rendering is required to obtain better immersive experience.
           This could be achieved by implementing binaural rendering methods shown in papers such as \cite{Zaunschirm2018-mn} or \cite{Schorkhuber2018-ql}.
     \item Reducing the artifacts due to switching of the impulse responses. This could be done by implementing the crossfading method shown in \cite{phdthesis}
@@ -213,6 +213,5 @@ The authors hopes this work broadens the perspective and potentials of applicati
 
 % Reference to bibliography file.
 \bibliography{refs}
-
 
 \end{document}
