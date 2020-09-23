@@ -27,7 +27,7 @@
 
 
 % The full title of the paper
-\title{ Immersive Guitar Playback System Using HRIRs and Spherical Microphone Array Measurement in a Room}
+\title{Immersive Guitar Playback System Using HRIRs and Spherical Microphone Array Measurement in a Room}
 
 % Put the authors in order here. The number in brackets define the corresponding affiliation.
 \author[1]{Takashi Minagawa}
@@ -61,8 +61,9 @@
 
     \begin{onecolabstract}
         A guitar playback system with a modern binaural rendering method is proposed.
-        The system reproduces the binaural sound image of the sound field produced by a electric guitar loudspeaker cabinet. This system gives immersive guitar playing experience by convolving rendered binaural impulse response with the pre-amplified guitar signal.
-        The system was composed from directional impulse responses obtained from a 80-channel spherical microphone array and a head related impulse response (HRIR) dataset, and integrating them in the spherical harmonic domain.
+        The system reproduces a binaural sound image of the sound field produced by a electric guitar loudspeaker cabinet, and the directional response could be switched with a headtracking feature.
+        This system gives immersive guitar playing experience by convolving the rendered binaural impulse response with a pre-amplified guitar signal.
+        The system was composed from directional impulse responses obtained from a 80 channel spherical microphone array and a head related impulse response (HRIR) dataset, and integrating them in the spherical harmonic domain.
         This work provides an outlook of the immersive guitar playing experience.
     \end{onecolabstract}
 ]
@@ -72,23 +73,23 @@
 Nowadays, guitarists playing at home do not have a convincing solution to have a immersive simulated in-venue experience.
 One may want to reexperience the accurate room response of his or her favorite venue, or one may want to check the acoustic response of his or her future stage in different direction for practicing.
 
-
 The best option to overcome this problem is using a guitar amplifier simulator such as Axe-Fx series by Fractal Audio Systems\footnote{\url{https://www.fractalaudio.com/}} and Kemper Profiler by Kemper Amps\footnote{\url{https://www.kemper-amps.com/}}.
 A block diagram of a guitar playback system is illustrated in Fig.\ref{fig:diag}.
 Modern guitar amp simulators like ones mentioned above process the guitar input signal with the simulated pre-amplifier and power-amplifier section, and convolve recorded guitar loudspeaker cabinet impulse response or a filter simulates it.
 While these systems simulates the original amplifiers significantly well and suit for recording and live uses, they lack the functionality of reproducing the far-field interaction of speaker cabinets and rooms especially while monitoring on headphones, since those systems focus on reproducing the near-field response of the original playback system.
 In addition, the phantom image of the processed guitar signal locates in the center regardless of the player's head position.
+This phenomenon is also known as inside-the-head locatedness (IHL)\cite{roginska2017immersive}.
 The simplest solution to these problem is to apply reverberation and directional cue by convolving room impulse response and head related impulse response (HRIR), but a single room impulse response only contains the response of a single point of a room and this approach will completely ignore the interaction between directional component of the room sound reflection and the directional cue of HRIRs.
 
 This work aims to overcome these problems by employing directional impulse response signals of a guitar speaker cabinet in a room obtained from a spherical microphone array and HRIR datasets, and combining them in spherical harmonic domain as shown in \cite{Andersson2017-qg}.
 The main focus of this work is to enhancing the player experience by improving the reproduction of interaction between guitar loudspeaker cabinet and the room it is played in.
-The authors implemented a system which reproduces binaural guitar speaker cabinet responses in a room, with a functionality to modify the azimuth of the impulse response rendering direction.
+The authors implemented a system which reproduces binaural guitar speaker cabinet responses in a room, with a functionality to modify the azimuth of the impulse response rendering direction with a GUI slider or a headtracking system.
 
 \begin{figure}
     \begin{center}
         \smartdiagram[flow diagram]{Player,
             Guitar, Pre-amp section, Power-amp section, Loudspeaker cabinet, Room response }
-        \caption{A flow chart illustration of guitar playback systems. } \label{fig:diag}
+        \caption{A block diagram illustration of guitar playback systems. } \label{fig:diag}
     \end{center}
 \end{figure}
 
@@ -97,7 +98,7 @@ The authors implemented a system which reproduces binaural guitar speaker cabine
 \section{Methods}
 
 \subsection{Theory}
-The theory behind the binaural signal rendering process based on \citet{Andersson2017-qg}'s work is briefly described below.
+The theory behind the binaural signal rendering process based on \citeauthor{Andersson2017-qg}'s work \cite{Andersson2017-qg} is briefly described below.
 Further details are described in \cite{Andersson2017-qg} and they are left to the readers.
 
 The frequency domain signals in the listener's ear positions $S^{l, r}$ can be described as the combination of head-related transfer function (HRTF) $H^{l, r}(\omega, \Omega)$ and plane wave decomposition of the sound field $D(\omega, \Omega)$ as below.
@@ -143,17 +144,27 @@ In addition, binaural signals with listener's head rotating counter-clockwise in
 
 \subsection{Measurements and Implementation}
 
-Impulse response of a guitar loudspeaker cabinet (Marshall 1960A) in the variable reverberation chamber  room in Kyushu University was measured with 80 channel spherical(fullerene) microphone array\cite{Omoto2015-wq} as described in Fig.\ref{fig:fullerene}.
+Two variations of impulse response datasets of a guitar loudspeaker cabinet (Marshall 1960A) were measured in the variable reverberation chamber and the multi-purpose experimental hall in Kyushu University Ohashi Campus, with the 80 channel spherical(fullerene) microphone array\cite{Omoto2015-wq} as described in Fig.\ref{fig:fullerene_zanka}, and Fig.\ref{fig:fullerene_tajigen}.
 The measurement was done by exciting the guitar loudspeaker cabinet with swept sine signal, and the horizontal distance between the loudspeaker cabinet and the microphone array was 1.5m.
 HRIR\_L2702 dataset by \citet{Bernschutz2013-zy} was used as HRIR database.
 Binaural impulse response in each azimuth direction according to Eq.\ref{rotation} are rendered with \emph{sound\_field\_analysis-py} \footnote{\url{https://github.com/AppliedAcousticsChalmers/sound_field_analysis-py}}, a Python package which is based on SOFiA toolbox\cite{Bernschutz2011-rj}.
-The impulse responses are then convolved with guitar signal by convolver plugin made by the JUCE\footnote{\url{https://juce.com/}} framework, a plugin framework in written in C++, with a rotation slider GUI which can adjust the rotation angle $\alpha$ as described in Fig.\ref{fig:gui}.
+The impulse responses are then convolved with guitar signal by convolver plugin made by the JUCE\footnote{\url{https://juce.com/}} framework, a plugin development framework in written in C++.
+The convolution engine was implemented by the authors and the "overlap-add" convolution algorithm was utilized.
+The frequency domain signals of the impulse responses were all computed in advance, and switching of the impulse responses was achieved by simply telling the convolution engine the address of the frequency domain signal of the next impulse response.
+The plugin comes with a rotation slider GUI which can adjust the rotation angle $\alpha$ as described in Fig.\ref{fig:gui}. The rotation angle $\alpha$ can be also manipulated via a gyro sensor in a smartphone mounted on a headphone as illustrated in Fig.\ref{fig:headtracker}, through OSC\cite{osc2002} protocol on a wireless LAN network. The headtracking feature was implemented to reduce IHL, as shown in \cite{roginska2017immersive}.
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.45\textwidth]{./fig/fullerene.jpg}
-    \caption{Measuring a guitar cabinet impulse response in a room with 80 channel spherical microphone array}
-    \label{fig:fullerene}
+    \includegraphics[width=0.45\textwidth]{./fig/fullerene_zanka.jpg}
+    \caption{Measuring a guitar cabinet impulse response in the variable reverberation chamber with 80 channel spherical microphone array}
+    \label{fig:fullerene_zanka}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.45\textwidth]{./fig/fullerene_tajigen.jpg}
+    \caption{Measuring a guitar cabinet impulse response in the multi purpose hall with 80 channel spherical microphone array}
+    \label{fig:fullerene_tajigen}
 \end{figure}
 
 \begin{figure}
@@ -163,13 +174,25 @@ The impulse responses are then convolved with guitar signal by convolver plugin 
     \label{fig:gui}
 \end{figure}
 
+\begin{figure}
+    \centering
+    \includegraphics[width=0.3\textwidth]{./fig/headtracker.jpg}
+    \caption{A smartphone pointed with an yellow arrow is mounted on top of the monitoring headphones. The smartphone is used as a gyro sensor controling the rotation angle parameter in the plugin.}
+    \label{fig:headtracker}
+\end{figure}
+
 \section{Results and Discussion}
 With the procedure described, we could successfully implement a guitar loudspeaker cabinet signal reproduction system which renders and convolves impulse responses from a guitar loudspeaker cabinet with the room acoustic response and directional cues from the HRIRs.
+The system also has the ability to change the rotation angle parameter through the slider on the GUI, or via gyro sensor on a smartphone with small amount of artifacts.
+Using the implemented system, guitar players can have a playback experience as if they were playing the guitar ampifier in the target room including the response to their body rotation.
+As stated in introduction, the system can help guitar players to flashback their playing experience in their past venue, and prepare for concerts in their future venue.
 However, the following reinforcements to the system are needed to improve the immersive guitar playing experience and they are currently work in progress.
 
 \begin{itemize}
-    \item A binaural signal rendering backend within the plugin to dynamically render binaural signals from other directional impulse response and HRIR dataset in SOFA convention format.
-    \item Integration of head-tracker to convolve impulse response of the appropriate angle in relation to the listener(player)'s head rotation.
+    \item A binaural signal rendering backend within the plugin to dynamically render binaural signals from other directional impulse response and HRIR dataset in SOFA convention format\cite{AES69-2015}.
+    \item Improvements on the binaural impulse response rendering is required to obtain better immersive experience.
+          This could be achieved by implementing binaural rendering methods shown in papers such as \cite{Zaunschirm2018-mn} or \cite{Schorkhuber2018-ql}.
+    \item Reducing the artifacts due to switching of the impulse responses. This could be done by implementing the crossfading method shown in \cite{phdthesis}
 \end{itemize}
 
 Moreover, it is worth mentioning that as shown in Fig.\ref{fig:diag}, the loudspeaker cabinet impulse response and directional room impulse response can be recorded separately and used as different module to render the combined binaural signal later.
@@ -181,7 +204,7 @@ The validity of the modular rendering method should be further considered.
 
 \section{Summary and Conclusion}
 
-A guitar loudspeaker cabinet simulation system which reproduces binaural impulse response containing information of directional room acoustic response and directional cues from HRIR was proposed, and its prototype was successfully implemented.
+A guitar loudspeaker cabinet simulation system which reproduces binaural impulse response containing information of directional room acoustic response and directional cues from HRIR was proposed, and its prototype with a headtracking feature was successfully implemented.
 Further improvements are needed to extend the immersive guitar playing experience.
 The authors hopes this work broadens the perspective and potentials of applications of binaural rendering technologies and musical signal processing technologies.
 
@@ -190,6 +213,5 @@ The authors hopes this work broadens the perspective and potentials of applicati
 
 % Reference to bibliography file.
 \bibliography{refs}
-
 
 \end{document}

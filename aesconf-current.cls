@@ -35,7 +35,7 @@
 \RequirePackage[current]{latexrelease}
 
 %% Define the conference info here
-\def \AESConferenceNumber {149\textsuperscript{st} }
+\def \AESConferenceNumber {149\textsuperscript{th} }
 \def \AESConferenceLocation {New York, NY, USA}
 \def \AESConferenceDate {2020 October 19 -- October 23}
 \def \AESConferenceTopic {Convention}
